@@ -26,6 +26,7 @@ type FileSystem interface {
 	Dumpz()
 }
 
+// CopyOptions indicate options applicable to a copy operation.
 type CopyOptions struct {
 	Overwrite, Move bool
 	Depth           int

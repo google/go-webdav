@@ -19,6 +19,7 @@ import (
 	"unicode"
 )
 
+// Special tokens the lexer can return.
 const (
 	EOF = -(iota + 1)
 	Not
@@ -65,16 +66,15 @@ func (l *lex) consume() {
 	if l.last == Not {
 		l.pos += 3
 	} else if l.last != EOF {
-		l.pos += 1
+		l.pos++
 	}
 }
 
 func (l *lex) tokenText(r rune) string {
 	if r == Not {
 		return "Not"
-	} else {
-		return string(r)
 	}
+	return string(r)
 }
 
 func (l *lex) consumeIf(acc func(rune) bool) (string, error) {

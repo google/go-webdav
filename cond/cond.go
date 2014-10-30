@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// cond package is a parser for the If header expected of webdav, to produce
+// Package cond is a parser for the If header expected of webdav, to produce
 // condition objects to evaluate the header.
 package cond
 
@@ -22,7 +22,7 @@ import (
 	"strings"
 )
 
-// Environment for evaluating conditions.
+// Env is the environment for evaluating conditions.
 type Env interface {
 	// ETag looks up the current ETag for a resource by URI.
 	ETag(r string) string
@@ -91,9 +91,8 @@ func (c *Condition) String() string {
 	}
 	if c.State != "" {
 		return prefix + c.State
-	} else {
-		return prefix + "[" + c.ETag + "]"
 	}
+	return prefix + "[" + c.ETag + "]"
 }
 
 // ConditionList represents a set of conditions that are AND'ed together.
@@ -176,6 +175,7 @@ func (t *IfTag) Eval(e Env, rdef string) bool {
 	return false
 }
 
+// GetAllTokens gets all lock tokens from the given IfTag.
 func (t *IfTag) GetAllTokens() []string {
 	var res []string
 	for _, l := range t.Lists {
@@ -209,8 +209,8 @@ func (t *IfTag) GetSingleState() (string, bool) {
 	return c.State, true
 }
 
-// Rewrite all resource URIs to be relative to the given host, checking that
-// they match at the same time.
+// RewriteHosts rewrites all resource URIs to be relative to the given host,
+// checking that they match at the same time.
 func (t *IfTag) RewriteHosts(h string) error {
 	for _, l := range t.Lists {
 		if l.Resource == "" {
@@ -237,7 +237,7 @@ func (t *IfTag) String() string {
 	return strings.Join(str, " ")
 }
 
-// Parse an If: header.
+// ParseIfTag parses the If HTTP header.
 func ParseIfTag(s string) (*IfTag, error) {
 	res := &IfTag{}
 	l := newLex(s)

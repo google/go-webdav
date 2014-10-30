@@ -45,7 +45,7 @@ func (l *lock) String() string {
 	return fmt.Sprintf("%s@%d T%s D%s", l.path, l.depth, l.token, t)
 }
 
-func (l *lock) toXml() string {
+func (l *lock) toXML() string {
 	l.m.Lock()
 	defer l.m.Unlock()
 	ds := strconv.Itoa(l.depth)
@@ -63,7 +63,7 @@ func (l *lock) toXml() string {
   <timeout>Second-%d</timeout>
   <locktoken><href>%s</href></locktoken>
   <lockroot><href>%s</href></lockroot>
-</activelock>`, ds, l.owner, t, l.token, wp.UrlEncode(l.path))
+</activelock>`, ds, l.owner, t, l.token, wp.URLEncode(l.path))
 }
 
 func (l *lock) touch() {

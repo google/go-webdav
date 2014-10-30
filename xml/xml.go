@@ -41,6 +41,7 @@ func s2x(s string) xml.Name {
 	}
 }
 
+// Any represents an opaque XML node.
 type Any struct {
 	XMLName xml.Name
 	XMLNS   string `xml:"xmlns,attr"`
@@ -48,6 +49,7 @@ type Any struct {
 	Inner   string `xml:",innerxml"`
 }
 
+// NewAny constructs an opaque XML node.
 func NewAny(n string) Any {
 	xn := s2x(n)
 	a := Any{XMLName: xn, XMLNS: xn.Space}
@@ -84,14 +86,16 @@ type MultiStatus struct {
 	Response []multiResponse
 }
 
+// NewMultiStatus constructs an XML node representing status for multiple URIs.
 func NewMultiStatus() *MultiStatus {
 	return &MultiStatus{
 		XMLNS: "DAV:",
 	}
 }
 
+// AddPropStatus adds the status of a given property.
 func (m *MultiStatus) AddPropStatus(href string, found, missing []Any) {
-	r := multiResponse{Href: wp.UrlEncode(href)}
+	r := multiResponse{Href: wp.URLEncode(href)}
 	if len(found) > 0 {
 		r.Props = append(r.Props, multiProp{
 			Prop:       prop{Any: found},
@@ -107,9 +111,10 @@ func (m *MultiStatus) AddPropStatus(href string, found, missing []Any) {
 	m.Response = append(m.Response, r)
 }
 
+// AddStatus adds a status of a given HREF.
 func (m *MultiStatus) AddStatus(href string, err error) {
 	m.Response = append(m.Response, multiResponse{
-		Href:   wp.UrlEncode(href),
+		Href:   wp.URLEncode(href),
 		Status: err.Error(),
 	})
 }
@@ -119,6 +124,8 @@ const (
 	StatusMulti = 207
 )
 
+// Send marshals the MultiStatus and writes it as appropriate to the given
+// HTTP response.
 func (m *MultiStatus) Send(w http.ResponseWriter) {
 	b, err := xml.MarshalIndent(m, "", " ")
 	if err != nil {
@@ -138,6 +145,7 @@ type propfind struct {
 	Prop     prop
 }
 
+// PropFindRequest represents the requested property query.
 type PropFindRequest struct {
 	AllProp, PropName bool
 	PropertyNames     []string
@@ -169,6 +177,7 @@ func ParsePropFind(in io.Reader) (PropFindRequest, error) {
 	return req, nil
 }
 
+// PropPatchRequest represents the requested change to object properties.
 type PropPatchRequest struct {
 	Set, Remove map[string]string
 }
@@ -273,12 +282,13 @@ type lockinfo struct {
 	Owner     string    `xml:"owner",innerxml`
 }
 
+// LockRequest is the parsed request for a lock change.
 type LockRequest struct {
 	Owner   string
 	Refresh bool
 }
 
-// ParseLockRequest parses a LOCK request
+// ParseLock parses a LOCK request
 func ParseLock(in io.Reader) (LockRequest, error) {
 	req := LockRequest{}
 	d := xml.NewDecoder(in)
@@ -303,6 +313,8 @@ func ParseLock(in io.Reader) (LockRequest, error) {
 	return req, nil
 }
 
+// SendProp is used to write a given property as a single response to
+// the provided HTTP writer.
 func SendProp(inner Any, w http.ResponseWriter) error {
 	p := prop{
 		Any:   []Any{inner},

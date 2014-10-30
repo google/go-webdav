@@ -43,9 +43,10 @@ type Error struct {
 	cause error
 }
 
+// Error codes that are reportable from the API.
 var (
-	// Note, NotYetImplemented is intended for use for code in progress.
-	ErrorNotYetImplemented = Error{code: http.StatusTeapot, text: "TODO(nmvc)"}
+	// ErrorNotYetImplemented is intended for use for code in progress.
+	ErrorNotYetImplemented = Error{code: http.StatusTeapot, text: "TODO"}
 	ErrorBadPath           = Error{code: http.StatusBadRequest, text: "BadPath"}
 	ErrorNotFound          = Error{code: http.StatusNotFound, text: "NotFound"}
 	ErrorConflict          = Error{code: http.StatusConflict, text: "Conflict"}
@@ -66,31 +67,35 @@ var (
 	ErrorBadLock           = Error{code: http.StatusBadRequest, text: "BadLock"}
 )
 
+// WithCause is used to chain a cause onto a reported HTTP error code.
 func (e Error) WithCause(cause error) Error {
 	return Error{code: e.code, text: e.text, cause: cause}
 }
 
-func (e Error) HttpCode() int {
+// HTTPCode gets the HTTP error code appropriate for the error.
+func (e Error) HTTPCode() int {
 	return e.code
 }
 
-func (e Error) HttpStatus() string {
+// HTTPStatus gets the HTTP status text to use for the error.
+func (e Error) HTTPStatus() string {
 	if t, ok := extStatusText[e.code]; ok {
 		return t
 	}
 	return http.StatusText(e.code)
 }
 
+// InternalCause gets the underlying cause of the error, should not generally
+// be provided to the client.
 func (e Error) InternalCause() error {
 	return e.cause
 }
 
 func (e Error) Error() string {
 	if e.cause != nil {
-		return fmt.Sprintf("%d %s : %s (%s)", e.code, e.HttpStatus(), e.text, e.cause)
-	} else {
-		return fmt.Sprintf("%d %s : %s", e.code, e.HttpStatus(), e.text)
+		return fmt.Sprintf("%d %s : %s (%s)", e.code, e.HTTPStatus(), e.text, e.cause)
 	}
+	return fmt.Sprintf("%d %s : %s", e.code, e.HTTPStatus(), e.text)
 }
 
 func (e Error) String() string {

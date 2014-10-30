@@ -13,9 +13,9 @@
 // limitations under the License.
 
 /*
-memfs is an in-memory implementation of webdav.FileSystem. It has no limits on
-how much memory it will consume for files, is recommended solely for testing
-purposes.
+Package memfs is an in-memory implementation of webdav.FileSystem. It has no
+limits on how much memory it will consume for files, is recommended solely for
+testing purposes.
 */
 package memfs
 
@@ -36,7 +36,8 @@ type memfs struct {
 	files map[string]*memfile
 }
 
-func NewMemfs() w.FileSystem {
+// NewMemFS creates a new webdav.FileSystem based in memory.
+func NewMemFS() w.FileSystem {
 	fs := &memfs{files: make(map[string]*memfile)}
 	fs.files["/"] = newMemFile(fs, "/", true)
 	return fs

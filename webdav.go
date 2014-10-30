@@ -41,6 +41,7 @@ type WebDAV struct {
 	Debug bool
 }
 
+// NewWebDAV creates a WebDAV http.Handler wrapper around a given FileSystem.
 func NewWebDAV(fs FileSystem) *WebDAV {
 	return &WebDAV{
 		fs: fs,
@@ -265,8 +266,8 @@ func (s *WebDAV) allowedHeader(w http.ResponseWriter, p Path) {
 func (s *WebDAV) errorHeader(ctx context, w http.ResponseWriter, e error) {
 	log.Printf("E[%s]: %s", ctx.p, e)
 	if we, ok := e.(Error); ok {
-		w.WriteHeader(we.HttpCode())
-		if we.HttpCode() == http.StatusMethodNotAllowed {
+		w.WriteHeader(we.HTTPCode())
+		if we.HTTPCode() == http.StatusMethodNotAllowed {
 			s.allowedHeader(w, ctx.p)
 		}
 	} else {
@@ -534,7 +535,7 @@ func (s *WebDAV) getPropValue(pn string, f File) (x.Any, bool) {
 	case "DAV::lockdiscovery":
 		l := s.lm.getLockForPath(f.GetPath())
 		if l != nil {
-			a.Inner = l.toXml()
+			a.Inner = l.toXML()
 		}
 		return a, true
 	case "DAV::displayname":
@@ -675,7 +676,7 @@ func (s *WebDAV) doLock(ctx context, w http.ResponseWriter, r *http.Request) {
 	log.Println(l)
 
 	a := x.NewAny("DAV::lockdiscovery")
-	a.Inner = l.toXml()
+	a.Inner = l.toXML()
 	x.SendProp(a, w)
 }
 

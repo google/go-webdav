@@ -20,8 +20,8 @@ import (
 	"strings"
 )
 
-// PathInTree determines if a given path is within a subtree.
-func PathInTree(path, subtree string) bool {
+// InTree determines if a given path is within a subtree.
+func InTree(path, subtree string) bool {
 	if path == subtree {
 		return true
 	}
@@ -38,7 +38,7 @@ func Included(fn, subtree string, depth int) (string, bool) {
 	if fn == subtree {
 		return "", true
 	}
-	if !PathInTree(fn, subtree) {
+	if !InTree(fn, subtree) {
 		return "", false
 	}
 	fn = gp.Clean(fn[len(subtree):])
@@ -49,7 +49,8 @@ func Included(fn, subtree string, depth int) (string, bool) {
 	return fn, true
 }
 
-func UrlEncode(s string) string {
+// URLEncode encodes a string so it is safe to place in a URL.
+func URLEncode(s string) string {
 	u := url.URL{Path: s}
 	return u.RequestURI()
 }
