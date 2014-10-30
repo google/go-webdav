@@ -23,7 +23,7 @@ import (
 )
 
 func main() {
-	srv := webdav.NewWebDAV(memfs.NewMemfs())
+	srv := webdav.NewWebDAV(memfs.NewMemFS())
 	srv.Debug = true
 	log.Printf("Listening on http://localhost:8080/...")
 	err := http.ListenAndServe(":8080", srv)

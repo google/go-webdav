@@ -18,20 +18,20 @@ import (
 	"testing"
 )
 
-func TestPathInTree(t *testing.T) {
-	if !PathInTree("/", "/") {
+func TestInTree(t *testing.T) {
+	if !InTree("/", "/") {
 		t.Error("/ should contain /")
 	}
-	if !PathInTree("/foo", "/") {
+	if !InTree("/foo", "/") {
 		t.Error("/ should contain /foo")
 	}
-	if !PathInTree("/foo/bar", "/") {
+	if !InTree("/foo/bar", "/") {
 		t.Error("/ should contain /foo/bar")
 	}
-	if PathInTree("/foo/zoo", "/foo/bar") {
+	if InTree("/foo/zoo", "/foo/bar") {
 		t.Error("/foo/bar should not contain /foo/zoo")
 	}
-	if PathInTree("/foozy", "/doozy") {
+	if InTree("/foozy", "/doozy") {
 		t.Error("/doozy should not contain /foozy")
 	}
 }

@@ -159,7 +159,7 @@ func (p *memp) Remove() error {
 func (p *memp) removeSubtree(subtree string) {
 	log.Println("RST", subtree)
 	for path := range p.fs.files {
-		if wp.PathInTree(path, subtree) {
+		if wp.InTree(path, subtree) {
 			delete(p.fs.files, path)
 		}
 	}
