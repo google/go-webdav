@@ -26,8 +26,9 @@ import (
 	"strings"
 	"sync"
 	"time"
-	"webdav/cond"
-	x "webdav/xml"
+
+	"github.com/google/go-webdav/cond"
+	x "github.com/google/go-webdav/xml"
 )
 
 // WebDAV is a http.Handler implementation that implements the WebDAV

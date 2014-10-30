@@ -20,7 +20,8 @@ import (
 	"io"
 	"net/http"
 	"strings"
-	wp "webdav/path"
+
+	wp "github.com/google/go-webdav/path"
 )
 
 var blankName xml.Name

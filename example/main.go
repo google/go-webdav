@@ -18,8 +18,8 @@ import (
 	"log"
 	"net/http"
 
-	"webdav"
-	"webdav/memfs"
+	"github.com/google/go-webdav"
+	"github.com/google/go-webdav/memfs"
 )
 
 func main() {

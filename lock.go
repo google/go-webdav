@@ -21,7 +21,8 @@ import (
 	"strconv"
 	"sync"
 	"time"
-	wp "webdav/path"
+
+	wp "github.com/google/go-webdav/path"
 )
 
 var (

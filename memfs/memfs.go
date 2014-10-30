@@ -27,8 +27,8 @@ import (
 	"sync"
 	"time"
 
-	w "webdav"
-	wp "webdav/path"
+	w "github.com/google/go-webdav"
+	wp "github.com/google/go-webdav/path"
 )
 
 type memfs struct {
